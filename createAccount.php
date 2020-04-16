@@ -134,6 +134,9 @@ class CreateAccount{
         }
         curl_close($ch);
 
+        echo $result;
+        echo "\n\n";
+
         return $result;
     }
 
@@ -168,6 +171,7 @@ class CreateAccount{
     function sendActivationCode($code){
         $postFields = $this->getPostFieldsOfActivationCode($code);
 
+        echo "sendActivationCode\n";
         $this->curlTaskJson($postFields);
     }
 
@@ -175,17 +179,75 @@ class CreateAccount{
         $postFields = array (
             'flow_token' => $this->flowToken,
             'subtask_inputs' => 
-            array (
+            array(
                 array (
                     'subtask_id' => 'EnterPassword',
                     'enter_password' => array (
-                        'password' => $password,
+                        'password' => "$password",
                         'link' => 'next_link',
                     ),
                 ),
             )
         );
 
+        echo $this->email;
+        echo "\n";
+
+        echo $this->guestToken;
+        echo "\n";
+
+        echo $this->flowToken;
+        echo "\n";
+
+        echo "setAccountPassword\n";
+        $this->curlTaskJson($postFields);
+    }
+
+    function skipPhoto(){
+        $postFields = '{"flow_token":"~~flowtoken~~","subtask_inputs":[{"subtask_id":"SelectAvatar","select_avatar":{"link":"skip_link"}}]}';
+        $postFields = str_replace('~~flowtoken~~', $this->flowToken, $postFields);
+
+        echo "skipPhoto\n";
+        $this->curlTaskJson($postFields);
+    }
+
+    function skipBio(){
+        $postFields = '{"flow_token":"~~flowtoken~~","subtask_inputs":[{"subtask_id":"EnterProfileBio","enter_text":{"link":"skip_link"}}]}';
+        $postFields = str_replace('~~flowtoken~~', $this->flowToken, $postFields);
+
+        echo "skipBio\n";
+        $this->curlTaskJson($postFields);
+    }
+
+    function setLanguages(){
+        $postFields = '{"flow_token":"~~flowtoken~~","subtask_inputs":[{"subtask_id":"LanguageSelectorList","settings_list":{"setting_responses":[{"key":"en","response_data":{"boolean_data":{"result":true}}},{"key":"pt","response_data":{"boolean_data":{"result":true}}},{"key":"de","response_data":{"boolean_data":{"result":false}}},{"key":"am","response_data":{"boolean_data":{"result":false}}},{"key":"ar","response_data":{"boolean_data":{"result":false}}},{"key":"hy","response_data":{"boolean_data":{"result":false}}},{"key":"eu","response_data":{"boolean_data":{"result":false}}},{"key":"bn","response_data":{"boolean_data":{"result":false}}},{"key":"my","response_data":{"boolean_data":{"result":false}}},{"key":"bg","response_data":{"boolean_data":{"result":false}}},{"key":"kn","response_data":{"boolean_data":{"result":false}}},{"key":"ca","response_data":{"boolean_data":{"result":false}}},{"key":"zh","response_data":{"boolean_data":{"result":false}}},{"key":"si","response_data":{"boolean_data":{"result":false}}},{"key":"ko","response_data":{"boolean_data":{"result":false}}},{"key":"ckb","response_data":{"boolean_data":{"result":false}}},{"key":"da","response_data":{"boolean_data":{"result":false}}},{"key":"dv","response_data":{"boolean_data":{"result":false}}},{"key":"sl","response_data":{"boolean_data":{"result":false}}},{"key":"es","response_data":{"boolean_data":{"result":false}}},{"key":"eo","response_data":{"boolean_data":{"result":false}}},{"key":"et","response_data":{"boolean_data":{"result":false}}},{"key":"fi","response_data":{"boolean_data":{"result":false}}},{"key":"fr","response_data":{"boolean_data":{"result":false}}},{"key":"cy","response_data":{"boolean_data":{"result":false}}},{"key":"ka","response_data":{"boolean_data":{"result":false}}},{"key":"el","response_data":{"boolean_data":{"result":false}}},{"key":"gu","response_data":{"boolean_data":{"result":false}}},{"key":"ht","response_data":{"boolean_data":{"result":false}}},{"key":"he","response_data":{"boolean_data":{"result":false}}},{"key":"hi","response_data":{"boolean_data":{"result":false}}},{"key":"nl","response_data":{"boolean_data":{"result":false}}},{"key":"hu","response_data":{"boolean_data":{"result":false}}},{"key":"id","response_data":{"boolean_data":{"result":false}}},{"key":"is","response_data":{"boolean_data":{"result":false}}},{"key":"it","response_data":{"boolean_data":{"result":false}}},{"key":"ja","response_data":{"boolean_data":{"result":false}}},{"key":"km","response_data":{"boolean_data":{"result":false}}},{"key":"lo","response_data":{"boolean_data":{"result":false}}},{"key":"lv","response_data":{"boolean_data":{"result":false}}},{"key":"lt","response_data":{"boolean_data":{"result":false}}},{"key":"ml","response_data":{"boolean_data":{"result":false}}},{"key":"ms","response_data":{"boolean_data":{"result":false}}},{"key":"mr","response_data":{"boolean_data":{"result":false}}},{"key":"ne","response_data":{"boolean_data":{"result":false}}},{"key":"no","response_data":{"boolean_data":{"result":false}}},{"key":"or","response_data":{"boolean_data":{"result":false}}},{"key":"pa","response_data":{"boolean_data":{"result":false}}},{"key":"ps","response_data":{"boolean_data":{"result":false}}},{"key":"fa","response_data":{"boolean_data":{"result":false}}},{"key":"pl","response_data":{"boolean_data":{"result":false}}},{"key":"ro","response_data":{"boolean_data":{"result":false}}},{"key":"ru","response_data":{"boolean_data":{"result":false}}},{"key":"sr","response_data":{"boolean_data":{"result":false}}},{"key":"sd","response_data":{"boolean_data":{"result":false}}},{"key":"sv","response_data":{"boolean_data":{"result":false}}},{"key":"tl","response_data":{"boolean_data":{"result":false}}},{"key":"th","response_data":{"boolean_data":{"result":false}}},{"key":"ta","response_data":{"boolean_data":{"result":false}}},{"key":"cs","response_data":{"boolean_data":{"result":false}}},{"key":"te","response_data":{"boolean_data":{"result":false}}},{"key":"bo","response_data":{"boolean_data":{"result":false}}},{"key":"tr","response_data":{"boolean_data":{"result":false}}},{"key":"uk","response_data":{"boolean_data":{"result":false}}},{"key":"ug","response_data":{"boolean_data":{"result":false}}},{"key":"ur","response_data":{"boolean_data":{"result":false}}},{"key":"vi","response_data":{"boolean_data":{"result":false}}},{"key":"other","response_data":{"boolean_data":{"result":false}}}],"link":"next_link"}}]}';
+        $postFields = str_replace('~~flowtoken~~', $this->flowToken, $postFields);
+
+        echo "setLanguages\n";
+        $this->curlTaskJson($postFields);
+    }
+
+    function setInterests(){
+        $postFields = '{"flow_token":"~~flowtoken~~","subtask_inputs":[{"subtask_id":"InterestPicker","interest_picker":{"link":"next_link"}}]}';
+        $postFields = str_replace('~~flowtoken~~', $this->flowToken, $postFields);
+
+        echo "setInterests\n";
+        $this->curlTaskJson($postFields);
+    }
+
+    function setRecommendations(){
+        $postFields = '{"flow_token":"~~flowtoken~~","subtask_inputs":[{"subtask_id":"UserRecommendationsURT","user_recommendations_urt":{"link":"next_link","selected_user_recommendations":[]}}]}';
+        $postFields = str_replace('~~flowtoken~~', $this->flowToken, $postFields);
+
+        echo "setRecommendations\n";
+        $this->curlTaskJson($postFields);
+    }
+
+    function setNotificationsPermission(){
+        $postFields = '{"flow_token":"~~flowtoken~~","subtask_inputs":[{"subtask_id":"NotificationsPermissionPrompt","notifications_permission_prompt":{"link":"skip_link"}}]}';
+        $postFields = str_replace('~~flowtoken~~', $this->flowToken, $postFields);
+
+        echo "setNotificationsPermission\n";
         $this->curlTaskJson($postFields);
     }
 

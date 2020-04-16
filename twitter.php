@@ -9,10 +9,15 @@ $createAccount = new CreateAccount('John Travolta', $mail);
 $createAccount->beginVerification();
 
 while(!$tempMailBOT->getActivationCode('twitter')){
-    sleep(5);
+    sleep(10);
 }
 $activationCode = $tempMailBOT->getActivationCode('twitter');
 
-echo $activationCode;
-
 $createAccount->sendActivationCode($activationCode);
+$createAccount->setAccountPassword("1597536548520");
+// $createAccount->skipPhoto();
+// $createAccount->skipBio();
+// $createAccount->setLanguages();
+// $createAccount->setInterests();
+// $createAccount->setRecommendations();
+// $createAccount->setNotificationsPermission();
