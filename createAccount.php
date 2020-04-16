@@ -164,7 +164,43 @@ class CreateAccount{
         }
         curl_close($ch);
 
-        echo $result;
+        // echo $result;
+    }
+
+    function setAccountPassword($password){
+        $postFields = array (
+            'flow_token' => $this->flowToken,
+            'subtask_inputs' => 
+            array (
+                array (
+                    'subtask_id' => 'EnterPassword',
+                    'enter_password' => array (
+                        'password' => $password,
+                        'link' => 'next_link',
+                    ),
+                ),
+            )
+        );
+
+        $ch = curl_init('https://api.twitter.com/1.1/onboarding/task.json');
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postFields));
+
+        $headers = array();
+        $headers[] = 'X-Guest-Token: ' . $this->guestToken;
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+
+        // echo $result;
     }
 
 }
