@@ -7,4 +7,6 @@
 
 require_once 'createAccount.php';
 $createAccount = new CreateAccount();
+
+// echo $createAccount->getGuestToken();
 echo $createAccount->getFlowToken();

@@ -1,7 +1,16 @@
 <?php
 class CreateAccount{
     function getGuestToken(){
-        return '1250624728823365632';
+        $ch = curl_init('https://twitter.com/i/flow/signup');
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($ch);
+        
+        $gt = explode('("gt=', $result)[1];
+        $gt = explode(';', $gt)[0];
+
+        return $gt;
     }
 
     function getFlowToken(){
@@ -23,6 +32,9 @@ class CreateAccount{
         }
         curl_close($ch);
 
-        return $result->flow_token;
+        if(isset($result->flow_token)){
+            return $result->flow_token;
+        }
+        else return false;
     }
 }
