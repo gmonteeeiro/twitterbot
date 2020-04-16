@@ -14,12 +14,22 @@ class TempMailBOT{
     
     function getMail(){
         $ch = curl_init($this->url);
+        
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookieFile);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookieFile);
 
         $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+            exit;
+        }
+        if($result === 'error code: 1006'){
+            exit;
+        }
+
+        curl_close($ch);
 
         $oDom = new simple_html_dom();
         $oDom->load($result);
