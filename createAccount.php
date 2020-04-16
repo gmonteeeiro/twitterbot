@@ -1,6 +1,14 @@
 <?php
 class CreateAccount{
-    function getGuestToken(){
+    private $guestToken = null;
+    private $flowToken  = null;
+
+    function __construct(){
+        $this->guestToken = $this->getGuestToken();
+        $this->flowToken  = $this->getFlowToken();
+    }
+
+    private function getGuestToken(){
         $ch = curl_init('https://twitter.com/i/flow/signup');
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -13,7 +21,7 @@ class CreateAccount{
         return $gt;
     }
 
-    function getFlowToken(){
+    private function getFlowToken(){
         $ch = curl_init('https://api.twitter.com/1.1/onboarding/task.json?flow_name=signup');
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -22,7 +30,7 @@ class CreateAccount{
 
         $headers = array();
         $headers[] = 'Content-Type: application/json';
-        $headers[] = 'X-Guest-Token: ' . $this->getGuestToken();
+        $headers[] = 'X-Guest-Token: ' . $this->guestToken;
         $headers[] = 'Authorization: Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA';
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -36,5 +44,33 @@ class CreateAccount{
             return $result->flow_token;
         }
         else return false;
+    }
+
+    function beginVerification($displayName, $mail){
+        $postFields = array(
+            'email' => $mail,
+            'display_name' => $displayName,
+            'flow_token' => $this->flowToken,
+        );
+
+        $ch = curl_init('https://api.twitter.com/1.1/onboarding/begin_verification.json');
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postFields));
+
+        $headers = array();
+        $headers[] = 'X-Guest-Token: ' . $this->guestToken;
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+
+        echo $result;
     }
 }

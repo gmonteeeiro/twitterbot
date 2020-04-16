@@ -1,12 +1,15 @@
 <?php
-// require_once 'tempMailBOT.php';
-
-// $tempMailBOT = new TempMailBOT();
-// $email = $tempMailBOT->getNewMail();
-// echo $email;
-
+require_once 'tempMailBOT.php';
 require_once 'createAccount.php';
-$createAccount = new CreateAccount();
 
-// echo $createAccount->getGuestToken();
-echo $createAccount->getFlowToken();
+$tempMailBOT = new TempMailBOT();
+$mail = $tempMailBOT->getNewMail();
+
+$createAccount = new CreateAccount();
+$createAccount->beginVerification('John Travolta', $mail);
+
+while(!$tempMailBOT->getActivationCode('twitter')){
+    sleep(5);
+}
+
+$activationCode = $tempMailBOT->getActivationCode('twitter');
