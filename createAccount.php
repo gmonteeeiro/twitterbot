@@ -1,5 +1,6 @@
 <?php
 class CreateAccount{
+    private $cookieFile = null;
     private $guestToken = null;
     private $flowToken  = null;
 
@@ -7,6 +8,12 @@ class CreateAccount{
     private $email = null;
 
     function __construct($displayName, $email){
+        $this->cookieFile = dirname(__FILE__) . '/twitter.cookie';
+
+        if(file_exists($this->cookieFile)){
+            unlink($this->cookieFile);
+        }
+
         $this->displayName = $displayName;
         $this->email = $email;
 
@@ -16,6 +23,9 @@ class CreateAccount{
 
     private function getGuestToken(){
         $ch = curl_init('https://twitter.com/i/flow/signup');
+
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookieFile);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookieFile);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
@@ -29,6 +39,9 @@ class CreateAccount{
 
     private function getFlowToken(){
         $ch = curl_init('https://api.twitter.com/1.1/onboarding/task.json?flow_name=signup');
+
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookieFile);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookieFile);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -74,10 +87,10 @@ class CreateAccount{
                         "link" => "next_link",
                         "name" => $this->displayName,
                         "personalization_settings" => array(
-                            "allow_cookie_use" => true,
-                            "allow_device_personalization" => true,
-                            "allow_partnerships" => true,
-                            "allow_ads_personalization" => true
+                            "allow_cookie_use" => false,
+                            "allow_device_personalization" => false,
+                            "allow_partnerships" => false,
+                            "allow_ads_personalization" => false
                         )
                     )
                 ),
@@ -117,6 +130,9 @@ class CreateAccount{
 
     private function curlTaskJson($postFields){
         $ch = curl_init('https://api.twitter.com/1.1/onboarding/task.json');
+
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookieFile);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookieFile);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
